@@ -1,0 +1,20 @@
+{
+  "name": "bikexbot-challenger",
+  "version": "1.0.0",
+  "description": "Auth0 Webtask for the BikeXBot to post challenges to Twitter",
+  "main": "index.js",
+  "scripts": {
+    "start-dtla": "wt create -w -b --secrets-file ../.secrets --param 'city=Los Angeles' --param 'screenName=BikeDTLABot' --param 'hashtag=#DTLA' .",
+    "start-pasadena": "wt create -w -b --secrets-file ../.secrets --param 'city=Pasadena' --param 'screenName=BikePasadenaBot' --param 'hashtag=#Pasadena' .",
+    "publish": "wt cron schedule -b --secrets-file ../.secrets 1m ."
+  },
+  "author": "Daniel James",
+  "license": "MIT",
+  "devDependencies": {
+    "wt-cli": "^6.1.0"
+  },
+  "dependencies": {
+    "lodash.orderby": "^4.6.0",
+    "node-fetch": "^1.7.1"
+  }
+}
