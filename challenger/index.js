@@ -1,5 +1,6 @@
 'use latest';
 
+import Twitter from 'twitter';
 import fetch from 'node-fetch';
 import orderBy from 'lodash.orderBy';
 
@@ -23,13 +24,22 @@ module.exports = (ctx, cb) => {
     const resolve = cb.bind(null, null);
     const reject = cb;
 
-    console.log('City', ctx.params.city);
-    console.log('Twitter account', ctx.params.screenName);
-    console.log('Hashtag', ctx.params.hashtag);
+    const client = new Twitter({
+        consumer_key: ctx.secrets.TWITTER_CONSUMER_KEY,
+        consumer_secret: ctx.secrets.TWITTER_CONSUMER_SECRET,
+        access_token_key: ctx.secrets.TWITTER_ACCESS_TOKEN_KEY,
+        access_token_secret: ctx.secrets.TWITTER_ACCESS_TOKEN_SECRET
+    });
+
+    const isDryRun = ctx.data.dryRun === "true";
+    const post = (options) => isDryRun
+        ? options
+        : client.post('statuses/update', options);
 
     getStations()
         .then(stations => stations
-            .filter(station => station.properties.addressCity === ctx.params.city)
+            .filter(station => station.properties.kioskConnectionStatus === "Active")
+            .filter(station => station.properties.addressCity === ctx.secrets.CITY)
             .map(station => ({
                 name: station.properties.name,
                 lon: station.geometry.coordinates[0],
@@ -73,8 +83,9 @@ module.exports = (ctx, cb) => {
             return result;
         })
         .then(result => ({
-            status: `${ctx.params.hashtag} #BikeShareChallenge: take ${result.bikesToMove} bikes from ${result.fullest.name} to ${result.emptiest.name} (${result.distance}, ${result.duration}) ${result.link}`,
+            status: `${ctx.secrets.PREFIX} ${ctx.secrets.HASHTAG} #BikeShareChallenge: take ${result.bikesToMove} bikes from ${result.fullest.name} to ${result.emptiest.name} (${result.distance}, ${result.duration}) ${result.link}`,
         }))
+        .then(post)
         .then(resolve)
         .catch(reject);
 };

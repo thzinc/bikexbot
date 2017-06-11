@@ -4,9 +4,12 @@
   "description": "Auth0 Webtask for the BikeXBot to post challenges to Twitter",
   "main": "index.js",
   "scripts": {
-    "start-dtla": "wt create -w -b --secrets-file ../.secrets --param 'city=Los Angeles' --param 'screenName=BikeDTLABot' --param 'hashtag=#DTLA' .",
-    "start-pasadena": "wt create -w -b --secrets-file ../.secrets --param 'city=Pasadena' --param 'screenName=BikePasadenaBot' --param 'hashtag=#Pasadena' .",
-    "publish": "wt cron schedule -b --secrets-file ../.secrets 1m ."
+    "start": "wt create -w -b --secrets-file ../.secrets-dtla --secret 'PREFIX=First ever' .",
+    "publish-dtla-stub": "wt cron schedule --secrets-file ../.secrets-dtla",
+    "publish-dtla-morning": "npm run publish-dtla-stub -- --secret 'PREFIX=Morning' -n bikedtlabot-challenger-morning '30 14 * * *' .",
+    "publish-dtla-midday": "npm run publish-dtla-stub -- --secret 'PREFIX=Mid-day' -n bikedtlabot-challenger-midday '30 18 * * *' .",
+    "publish-dtla-evening": "npm run publish-dtla-stub -- --secret 'PREFIX=Evening' -n bikedtlabot-challenger-evening '30 23 * * *' .",
+    "publish-dtla": "npm run publish-dtla-morning && npm run publish-dtla-midday && npm run publish-dtla-evening"
   },
   "author": "Daniel James",
   "license": "MIT",
@@ -15,6 +18,7 @@
   },
   "dependencies": {
     "lodash.orderby": "^4.6.0",
-    "node-fetch": "^1.7.1"
+    "node-fetch": "^1.7.1",
+    "twitter": "^1.7.0"
   }
 }
