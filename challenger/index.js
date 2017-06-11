@@ -11,7 +11,13 @@ const getStations = () => fetch(`${baseUrl}/stations/json`)
 const getDirections = (key, from, to) => fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${from.lat},${from.lon}&destination=${to.lat},${to.lon}&mode=bicycling&key=${key}`)
     .then(response => response.json());
 
-const getDirectionsLink = (from, to) => `https://www.google.com/maps/dir/'${from.lat},${from.lon}'/'${to.lat},${to.lon}'/@${from.lat},${from.lon},16z/data=!3m1!4b1!4m10!4m9!1m3!2m2!1d${from.lon}!2d${to.lat}a${to.lon}!1d${from.lat}2${from.lon}!3e1`
+const getDirectionsLink = (from, to) => {
+    const center = {
+        lat: (from.lat + to.lat) / 2,
+        lon: (from.lon + to.lon) / 2,
+    };
+    return `https://www.google.com/maps/dir/'${from.lat},${from.lon}'/'${to.lat},${to.lon}'/@${center.lat},${center.lon},16z/data=!3m1!4b1!4m10!4m9!1m3!2m2!1d${from.lon}!2d${from.lat}!1m3!2m2!1d${to.lon}!2d${to.lat}!3e1`;
+}
 
 module.exports = (ctx, cb) => {
     const resolve = cb.bind(null, null);
