@@ -2,7 +2,7 @@
 
 import Twitter from 'twitter';
 import fetch from 'node-fetch';
-import orderBy from 'lodash.orderBy';
+import orderBy from 'lodash.orderby';
 
 const baseUrl = 'https://bikeshare.metro.net'
 const getStations = () => fetch(`${baseUrl}/stations/json`)
@@ -32,7 +32,7 @@ module.exports = (ctx, cb) => {
     });
 
     const isDryRun = ctx.data.dryRun === "true";
-    const post = (options) => isDryRun
+    const post = (options) => isDryRun || !options.shouldPost
         ? options
         : client.post('statuses/update', options);
 
@@ -78,11 +78,8 @@ module.exports = (ctx, cb) => {
                 selectedStations.emptiest.docksAvailable
             )
         }))
-        .then(result => {
-            if (result.bikesToMove === 0) return Promise.reject(result);
-            return result;
-        })
         .then(result => ({
+            shouldPost: result.bikesToMove > 0,
             status: `${ctx.secrets.PREFIX} ${ctx.secrets.HASHTAG} #BikeShareChallenge: take ${result.bikesToMove} bikes from ${result.fullest.name} to ${result.emptiest.name} (${result.distance}, ${result.duration}) ${result.link}`,
         }))
         .then(post)

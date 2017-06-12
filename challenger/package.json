@@ -4,11 +4,11 @@
   "description": "Auth0 Webtask for the BikeXBot to post challenges to Twitter",
   "main": "index.js",
   "scripts": {
-    "start": "wt create -w -b --secrets-file ../.secrets-dtla --secret 'PREFIX=First ever' .",
+    "start": "wt create -w -b --secrets-file ../.secrets-dtla --secret \"PREFIX=First ever\" .",
     "publish-dtla-stub": "wt cron schedule --secrets-file ../.secrets-dtla",
-    "publish-dtla-morning": "npm run publish-dtla-stub -- --secret 'PREFIX=Morning' -n bikedtlabot-challenger-morning '30 14 * * *' .",
-    "publish-dtla-midday": "npm run publish-dtla-stub -- --secret 'PREFIX=Mid-day' -n bikedtlabot-challenger-midday '30 18 * * *' .",
-    "publish-dtla-evening": "npm run publish-dtla-stub -- --secret 'PREFIX=Evening' -n bikedtlabot-challenger-evening '30 23 * * *' .",
+    "publish-dtla-morning": "npm run publish-dtla-stub -- --secret \"PREFIX=Morning\" -n bikedtlabot-challenger-morning \"30 14 * * *\" .",
+    "publish-dtla-midday": "npm run publish-dtla-stub -- --secret \"PREFIX=Mid-day\" -n bikedtlabot-challenger-midday \"30 18 * * *\" .",
+    "publish-dtla-evening": "npm run publish-dtla-stub -- --secret \"PREFIX=Evening\" -n bikedtlabot-challenger-evening \"30 23 * * *\" .",
     "publish-dtla": "npm run publish-dtla-morning && npm run publish-dtla-midday && npm run publish-dtla-evening"
   },
   "author": "Daniel James",
