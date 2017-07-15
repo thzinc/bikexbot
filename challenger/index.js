@@ -80,7 +80,7 @@ module.exports = (ctx, cb) => {
         }))
         .then(result => ({
             shouldPost: result.bikesToMove > 0,
-            status: `${ctx.secrets.PREFIX} ${ctx.secrets.HASHTAG} #BikeShareChallenge: take ${result.bikesToMove} bikes from ${result.fullest.name} to ${result.emptiest.name} (${result.distance}, ${result.duration}) ${result.link}`,
+            status: `${ctx.secrets.PREFIX} ${ctx.secrets.HASHTAG} #BikeShareChallenge: go from ${result.fullest.name} to ${result.emptiest.name} (${result.distance}, ${result.duration}) ${result.link}`,
         }))
         .then(post)
         .then(resolve)
