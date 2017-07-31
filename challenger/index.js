@@ -36,10 +36,11 @@ module.exports = (ctx, cb) => {
         ? options
         : client.post('statuses/update', options);
 
+    const cityFilter = new RegExp(`^${ctx.secrets.CITY}$`);
     getStations()
         .then(stations => stations
             .filter(station => station.properties.kioskConnectionStatus === "Active")
-            .filter(station => station.properties.addressCity === ctx.secrets.CITY)
+            .filter(station => cityFilter.test(station.properties.addressCity))
             .map(station => ({
                 name: station.properties.name,
                 lon: station.geometry.coordinates[0],
@@ -80,7 +81,7 @@ module.exports = (ctx, cb) => {
         }))
         .then(result => ({
             shouldPost: result.bikesToMove > 0,
-            status: `${ctx.secrets.PREFIX} ${ctx.secrets.HASHTAG} #BikeShareChallenge: take ${result.bikesToMove} bikes from ${result.fullest.name} to ${result.emptiest.name} (${result.distance}, ${result.duration}) ${result.link}`,
+            status: `${ctx.secrets.PREFIX} ${ctx.secrets.HASHTAG} #BikeShareChallenge: go from ${result.fullest.name} to ${result.emptiest.name} (${result.distance}, ${result.duration}) ${result.link}`,
         }))
         .then(post)
         .then(resolve)
