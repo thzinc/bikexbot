@@ -36,10 +36,11 @@ module.exports = (ctx, cb) => {
         ? options
         : client.post('statuses/update', options);
 
+    const cityFilter = new RegExp(`^${ctx.secrets.CITY}$`);
     getStations()
         .then(stations => stations
             .filter(station => station.properties.kioskConnectionStatus === "Active")
-            .filter(station => station.properties.addressCity === ctx.secrets.CITY)
+            .filter(station => cityFilter.test(station.properties.addressCity))
             .map(station => ({
                 name: station.properties.name,
                 lon: station.geometry.coordinates[0],
