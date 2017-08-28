@@ -19,7 +19,12 @@
     "publish-portofla-morning": "npm run publish-portofla-stub -- --secret \"PREFIX=Morning\" -n bikeportoflabot-challenger-morning \"30 14 * * *\" .",
     "publish-portofla-midday": "npm run publish-portofla-stub -- --secret \"PREFIX=Mid-day\" -n bikeportoflabot-challenger-midday \"30 18 * * *\" .",
     "publish-portofla-evening": "npm run publish-portofla-stub -- --secret \"PREFIX=Evening\" -n bikeportoflabot-challenger-evening \"30 23 * * *\" .",
-    "publish-portofla": "npm run publish-portofla-morning && npm run publish-portofla-midday && npm run publish-portofla-evening"
+    "publish-portofla": "npm run publish-portofla-morning && npm run publish-portofla-midday && npm run publish-portofla-evening",
+    "publish-venice-stub": "wt cron schedule --secrets-file ../.secrets-venice",
+    "publish-venice-morning": "npm run publish-venice-stub -- --secret \"PREFIX=Morning\" -n bikevenicebot-challenger-morning \"30 14 * * *\" .",
+    "publish-venice-midday": "npm run publish-venice-stub -- --secret \"PREFIX=Mid-day\" -n bikevenicebot-challenger-midday \"30 18 * * *\" .",
+    "publish-venice-evening": "npm run publish-venice-stub -- --secret \"PREFIX=Evening\" -n bikevenicebot-challenger-evening \"30 23 * * *\" .",
+    "publish-venice": "npm run publish-venice-morning && npm run publish-venice-midday && npm run publish-venice-evening"
   },
   "author": "Daniel James",
   "license": "MIT",

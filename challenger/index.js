@@ -52,38 +52,44 @@ module.exports = (ctx, cb) => {
             fullest: orderBy(stations, ['bikesAvailable', 'docksAvailable'], ['desc', 'desc']).find(x => x),
             emptiest: orderBy(stations, ['bikesAvailable', 'docksAvailable'], ['asc', 'desc']).find(x => x),
         }))
-        .then(selectedStations => getDirections(ctx.secrets.GOOGLE_API_KEY, selectedStations.fullest, selectedStations.emptiest)
-            .then(directions => ({
-                link: getDirectionsLink(selectedStations.fullest, selectedStations.emptiest),
-                distance: directions.routes
-                    .map(route => route.legs
-                        .map(leg => leg.distance.text)
-                        .find(x => x))
-                    .find(x => x),
-                duration: directions.routes
-                    .map(route => route.legs
-                        .map(leg => leg.duration.text)
-                        .find(x => x))
-                    .find(x => x),
-                fullest: selectedStations.fullest,
-                emptiest: selectedStations.emptiest,
-            })))
-        .then(selectedStations => ({
-            link: selectedStations.link,
-            distance: selectedStations.distance,
-            duration: selectedStations.duration,
-            fullest: selectedStations.fullest,
-            emptiest: selectedStations.emptiest,
-            bikesToMove: Math.min(
-                Math.floor((selectedStations.fullest.bikesAvailable - selectedStations.emptiest.bikesAvailable) / 2),
-                selectedStations.emptiest.docksAvailable
-            )
-        }))
-        .then(result => ({
-            shouldPost: result.bikesToMove > 0,
-            status: `${ctx.secrets.PREFIX} ${ctx.secrets.HASHTAG} #BikeShareChallenge: go from ${result.fullest.name} to ${result.emptiest.name} (${result.distance}, ${result.duration}) ${result.link}`,
-        }))
-        .then(post)
-        .then(resolve)
+        .then(selectedStations => {
+            if (!selectedStations.fullest || !selectedStations.emptiest) {
+                return resolve('No stations available')
+            };
+            return getDirections(ctx.secrets.GOOGLE_API_KEY, selectedStations.fullest, selectedStations.emptiest)
+                .then(directions => ({
+                    link: getDirectionsLink(selectedStations.fullest, selectedStations.emptiest),
+                    distance: directions.routes
+                        .map(route => route.legs
+                            .map(leg => leg.distance.text)
+                            .find(x => x))
+                        .find(x => x),
+                    duration: directions.routes
+                        .map(route => route.legs
+                            .map(leg => leg.duration.text)
+                            .find(x => x))
+                        .find(x => x),
+                    fullest: selectedStations.fullest,
+                    emptiest: selectedStations.emptiest,
+                }))
+                .then(ss => ({
+                    link: ss.link,
+                    distance: ss.distance,
+                    duration: ss.duration,
+                    fullest: ss.fullest,
+                    emptiest: ss.emptiest,
+                    bikesToMove: Math.min(
+                        Math.floor((ss.fullest.bikesAvailable - ss.emptiest.bikesAvailable) / 2),
+                        ss.emptiest.docksAvailable
+                    )
+                }))
+                .then(result => ({
+                    shouldPost: result.bikesToMove > 0,
+                    status: `${ctx.secrets.PREFIX} ${ctx.secrets.HASHTAG} #BikeShareChallenge: go from ${result.fullest.name} to ${result.emptiest.name} (${result.distance}, ${result.duration}) ${result.link}`,
+                }))
+                .then(post)
+                .then(resolve);
+        })
+        
         .catch(reject);
 };
