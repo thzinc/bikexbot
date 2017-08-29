@@ -1,0 +1,20 @@
+{
+    "name": "bikexbot-caller",
+    "version": "1.0.0",
+    "description": "Auth0 Webtask for a simple webhook that calls other webhooks",
+    "main": "index.js",
+    "scripts": {
+      "publish-morning": "wt cron schedule --secrets-file .secrets-morning -n bikexbot-caller-morning \"30 14 * * *\" .",
+      "publish-midday": "wt cron schedule --secrets-file .secrets-midday -n bikexbot-caller-midday \"30 18 * * *\" .",
+      "publish-evening": "wt cron schedule --secrets-file .secrets-evening -n bikexbot-caller-evening \"30 23 * * *\" ."
+    },
+    "author": "Daniel James",
+    "license": "MIT",
+    "devDependencies": {
+      "wt-cli": "^6.1.0"
+    },
+    "dependencies": {
+      "node-fetch": "^1.7.1"
+    }
+  }
+  

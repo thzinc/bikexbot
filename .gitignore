@@ -1,6 +1,2 @@
 node_modules
-.secrets
-.secrets-dtla
-.secrets-pasadena
-.secrets-portofla
-.secrets-venice
+.secrets*

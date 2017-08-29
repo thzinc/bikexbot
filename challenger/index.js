@@ -90,6 +90,5 @@ module.exports = (ctx, cb) => {
                 .then(post)
                 .then(resolve);
         })
-        
         .catch(reject);
 };
