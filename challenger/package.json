@@ -4,7 +4,7 @@
   "description": "Auth0 Webtask for the BikeXBot to post challenges to Twitter",
   "main": "index.js",
   "scripts": {
-    "start": "wt create -w -b --secrets-file ../.secrets-dtla --secret \"PREFIX=First ever\" .",
+    "start": "wt create -w -b --secrets-file ../.secrets --secret \"PREFIX=First ever\" .",
     "publish-dtla-stub": "wt create -b --secrets-file ../.secrets-dtla",
     "publish-dtla-morning": "npm run publish-dtla-stub -- --secret \"PREFIX=Morning\" -n bikedtlabot-challenger-morning .",
     "publish-dtla-midday": "npm run publish-dtla-stub -- --secret \"PREFIX=Mid-day\" -n bikedtlabot-challenger-midday .",
